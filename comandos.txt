@@ -1,0 +1,13 @@
+/*instalar go-chi*/
+go get -u github.com/go-chi/chi
+
+/*instalar go-chi*/
+go get -u github.com/go-kit/kit
+
+
+
+dep status
+dep ensure
+git add
+git commit -m "mrnsaje"
+git push
