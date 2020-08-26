@@ -1,11 +1,14 @@
 package product
 
+import "github.com/GolangNorthwindRestApi/helper"
+
 type Service interface {
 	GetProductById(param *getProductByIDrequest) (*Product, error)
 	GetProducts(params *getProductsRequest) (*ProductList, error)
 	InsertProduct(params *getAddProductRequest) (int64, error)
 	UpdateProduct(params *updateProductRequest) (int64, error)
 	DeleteProduct(params *deleteProductRequest) (int64, error)
+	GetBestSellers() (*ProductTopResponse, error)
 }
 
 type service struct{ repo Repository }
@@ -22,14 +25,10 @@ func (s *service) GetProductById(param *getProductByIDrequest) (*Product, error)
 
 func (s *service) GetProducts(params *getProductsRequest) (*ProductList, error) {
 	products, err := s.repo.GetProducts(params)
-	if err != nil {
-		panic(err)
-	}
+	helper.Catch(err)
 
 	totalproduct, err := s.repo.GetTotalProducts()
-	if err != nil {
-		panic(err)
-	}
+	helper.Catch(err)
 	return &ProductList{Data: products, TotalRecords: totalproduct}, nil
 }
 
@@ -43,4 +42,14 @@ func (s *service) UpdateProduct(params *updateProductRequest) (int64, error) {
 
 func (s *service) DeleteProduct(params *deleteProductRequest) (int64, error) {
 	return s.repo.DeleteProduct(params)
+}
+
+func (s *service) GetBestSellers() (*ProductTopResponse, error) {
+	products, err := s.repo.GetBestSellers()
+	helper.Catch(err)
+	totalVentas, err := s.repo.GetTotalVentas()
+	helper.Catch(err)
+
+	return &ProductTopResponse{Data: products, TotalVentas: totalVentas}, err
+
 }
