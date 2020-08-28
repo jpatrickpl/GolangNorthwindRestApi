@@ -4,6 +4,7 @@ import "github.com/GolangNorthwindRestApi/helper"
 
 type Service interface {
 	GetEmployees(params *getEmployeesRequest) (*EmployeeList, error)
+	GetEmployeeById(param *getEmployeeByIdRequest) (*Employee, error)
 }
 
 type service struct {
