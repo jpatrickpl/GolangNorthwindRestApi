@@ -18,6 +18,9 @@ func MakeHttpHandler(s Service) http.Handler {
 	getEmployeeByIdHandler := kithttp.NewServer(makeGetEmployeeByIdEndPoint(s), getEmployeeByIDRequestDecoder, kithttp.EncodeJSONResponse)
 	r.Method(http.MethodGet, "/{id}", getEmployeeByIdHandler)
 
+	getBestEmployeeHandler := kithttp.NewServer(makeGetBestEmployeeEndPoint(s), getBestEmployeeRequestDecoder, kithttp.EncodeJSONResponse)
+	r.Method(http.MethodGet, "/best", getBestEmployeeHandler)
+
 	return r
 }
 func getEmployeesRequestDecoder(_ context.Context, r *http.Request) (interface{}, error) {
@@ -29,4 +32,8 @@ func getEmployeesRequestDecoder(_ context.Context, r *http.Request) (interface{}
 
 func getEmployeeByIDRequestDecoder(_ context.Context, r *http.Request) (interface{}, error) {
 	return getEmployeeByIdRequest{EmployeeID: chi.URLParam(r, "id")}, nil
+}
+
+func getBestEmployeeRequestDecoder(_ context.Context, r *http.Request) (interface{}, error) {
+	return getEmployeesRequest{}, nil
 }
