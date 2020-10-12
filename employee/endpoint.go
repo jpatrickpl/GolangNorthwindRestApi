@@ -16,6 +16,18 @@ type getEmployeeByIdRequest struct {
 }
 
 type getBestEmployeeRequest struct{}
+type addEmployeeRequest struct {
+	Address       string
+	BusinessPhone string
+	Company       string
+	EmailAddress  string
+	FaxNumber     string
+	FirstName     string
+	HomePhone     string
+	LastName      string
+	MobilePhone   string
+	JobTitle      string
+}
 
 func makeGetEmployeesEndPoint(s Service) endpoint.Endpoint {
 	getEmployeesEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
@@ -39,10 +51,21 @@ func makeGetEmployeeByIdEndPoint(s Service) endpoint.Endpoint {
 }
 
 func makeGetBestEmployeeEndPoint(s Service) endpoint.Endpoint {
-		getBestEmployeeEndPoint := func(_  context.Context, request interface{}) (interface{}, error) {
-			result, err := s.GetBestEmployee()
-			helper.Catch(err)
-			return result, nil
-		}
-		return getBestEmployeeEndPoint
+	getBestEmployeeEndPoint := func(_ context.Context, request interface{}) (interface{}, error) {
+		result, err := s.GetBestEmployee()
+		helper.Catch(err)
+		return result, nil
 	}
+	return getBestEmployeeEndPoint
+}
+
+func MakeInsertEmployeeEndpoint(s Service) endpoint.Endpoint {
+	getInsertEmployeeEndPoint := func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(addEmployeeRequest)
+		result, err := s.InsertEmployee(&req)
+		helper.Catch(err)
+		return result, nil
+	}
+	return getInsertEmployeeEndPoint
+
+}

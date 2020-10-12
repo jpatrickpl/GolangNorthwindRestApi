@@ -11,6 +11,7 @@ type Repository interface {
 	GetTotalEmployees() (int64, error)
 	GetEmployeeById(param *getEmployeeByIdRequest) (*Employee, error)
 	GetBestEmployee() (*BestEmployee, error)
+	InsertEmployee(params *addEmployeeRequest) (int64,error)
 }
 
 type repository struct {
@@ -92,4 +93,17 @@ func (repo *repository) GetBestEmployee() (*BestEmployee, error) {
 
 	return employee, nil
 
+}
+
+func (repo *repository) InsertEmployee(params *addEmployeeRequest) (int64,error) {
+	const sql = `insert into EMPLOYEES   ( first_name,last_name,
+	company, address,business_phone,email_address,fax_number,home_phone, job_title,mobile_phone ) values(?,?,?,?,?,?,?,?,?,?)`
+
+	result, err := repo.db.Exec(sql,params.FirstName,params.LastName,params.Company,params.Address,
+			 params.BusinessPhone,params.EmailAddress,params.FaxNumber,params.HomePhone,params.JobTitle,params.MobilePhone)
+
+			 helper.Catch(err)
+			 id,err:=result.LastInsertId()
+			 helper.Catch(err)
+			 return id,nil
 }
