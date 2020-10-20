@@ -11,9 +11,9 @@ type Repository interface {
 	GetTotalEmployees() (int64, error)
 	GetEmployeeById(param *getEmployeeByIdRequest) (*Employee, error)
 	GetBestEmployee() (*BestEmployee, error)
-	InsertEmployee(params *addEmployeeRequest) (int64,error)
-	UpdateEmployee(params *updateEmployeeRequest) (int64,error)
-	
+	InsertEmployee(params *addEmployeeRequest) (int64, error)
+	UpdateEmployee(params *updateEmployeeRequest) (int64, error)
+	DeleteEmployee(params *deleteEmployeeRequest) (int64, error)
 }
 
 type repository struct {
@@ -97,20 +97,20 @@ func (repo *repository) GetBestEmployee() (*BestEmployee, error) {
 
 }
 
-func (repo *repository) InsertEmployee(params *addEmployeeRequest) (int64,error) {
+func (repo *repository) InsertEmployee(params *addEmployeeRequest) (int64, error) {
 	const sql = `insert into EMPLOYEES   ( first_name,last_name,
 	company, address,business_phone,email_address,fax_number,home_phone, job_title,mobile_phone ) values(?,?,?,?,?,?,?,?,?,?)`
 
-	result, err := repo.db.Exec(sql,params.FirstName,params.LastName,params.Company,params.Address,
-			 params.BusinessPhone,params.EmailAddress,params.FaxNumber,params.HomePhone,params.JobTitle,params.MobilePhone)
+	result, err := repo.db.Exec(sql, params.FirstName, params.LastName, params.Company, params.Address,
+		params.BusinessPhone, params.EmailAddress, params.FaxNumber, params.HomePhone, params.JobTitle, params.MobilePhone)
 
-			 helper.Catch(err)
-			 id,err:=result.LastInsertId()
-			 helper.Catch(err)
-			 return id,nil
+	helper.Catch(err)
+	id, err := result.LastInsertId()
+	helper.Catch(err)
+	return id, nil
 }
 
-func (repo *repository) UpdateEmployee(params *updateEmployeeRequest) (int64,error){
+func (repo *repository) UpdateEmployee(params *updateEmployeeRequest) (int64, error) {
 	const sql = `UPDATE EMPLOYEES   
 				  SET first_name = ?,
 				  		last_name=?,
@@ -124,10 +124,22 @@ func (repo *repository) UpdateEmployee(params *updateEmployeeRequest) (int64,err
 						 mobile_phone=?
 						  WHERE id = ?`
 
-	 _,err := repo.db.Exec(sql,params.FirstName,params.LastName,params.Company,params.Address,
-			params.BusinessPhone,params.EmailAddress,params.FaxNumber,params.HomePhone,params.JobTitle,params.MobilePhone,params.ID)
+	_, err := repo.db.Exec(sql, params.FirstName, params.LastName, params.Company, params.Address,
+		params.BusinessPhone, params.EmailAddress, params.FaxNumber, params.HomePhone, params.JobTitle, params.MobilePhone, params.ID)
 
-			helper.Catch(err)
+	helper.Catch(err)
 
-			return params.ID,nil
+	return params.ID, nil
+}
+
+func (repo *repository) DeleteEmployee(params *deleteEmployeeRequest) (int64, error) {
+	const sql = `delete from employees where id = ?`
+
+	result, err := repo.db.Exec(sql, params.EmployeeID)
+
+	helper.Catch(err)
+	count, err := result.RowsAffected()
+	helper.Catch(err)
+	return count, nil
+
 }

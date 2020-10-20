@@ -6,8 +6,9 @@ type Service interface {
 	GetEmployees(params *getEmployeesRequest) (*EmployeeList, error)
 	GetEmployeeById(param *getEmployeeByIdRequest) (*Employee, error)
 	GetBestEmployee() (*BestEmployee, error)
-	InsertEmployee(params *addEmployeeRequest) (int64,error) 
-	UpdateEmployee(params *updateEmployeeRequest) (int64,error)
+	InsertEmployee(params *addEmployeeRequest) (int64, error)
+	UpdateEmployee(params *updateEmployeeRequest) (int64, error)
+	DeleteEmployee(params *deleteEmployeeRequest) (int64, error) 
 }
 
 type service struct {
@@ -36,9 +37,13 @@ func (s *service) GetBestEmployee() (*BestEmployee, error) {
 	return s.repo.GetBestEmployee()
 }
 
-func (s *service) InsertEmployee(params *addEmployeeRequest) (int64,error)  {
+func (s *service) InsertEmployee(params *addEmployeeRequest) (int64, error) {
 	return s.repo.InsertEmployee(params)
 }
-func (s *service) UpdateEmployee(params *updateEmployeeRequest) (int64,error)  {
+func (s *service) UpdateEmployee(params *updateEmployeeRequest) (int64, error) {
 	return s.repo.UpdateEmployee(params)
+}
+
+func (s *service) DeleteEmployee(params *deleteEmployeeRequest) (int64, error) {
+	return s.repo.DeleteEmployee(params)
 }
